@@ -57,8 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/login.button.signin"
-            android:id="@+id/btnSignIn"
-            android:onClick="singIn"/>
+            android:id="@+id/btnSignIn"/>
 
         <Button
             android:layout_width="wrap_content"
@@ -66,6 +65,7 @@
             android:text="@string/login.button.signup"
             android:id="@+id/btnSignUp"
             android:onClick="singUp"/>
+
     </LinearLayout>
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"

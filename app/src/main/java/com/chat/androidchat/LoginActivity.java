@@ -1,47 +1,34 @@
 package com.chat.androidchat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+
 public class LoginActivity extends AppCompatActivity {
 
-   /* @BindView(R.id.editTxtEmail)
+
+    @Bind(R.id.editTxtEmail)
     EditText editTxtEmail;
-    @BindView(R.id.editTxtPassword)
+    @Bind(R.id.editTxtPassword)
     EditText editTxtPassword;
-    @BindView(R.id.wrapperPassword)
-    TextInputLayout wrapperPassword;
-    @BindView(R.id.btnSignIn)
-    Button btnSignIn;
-    @BindView(R.id.btnSignUp)
-    Button btnSignUp;
-    @BindView(R.id.layoutButtons)
-    LinearLayout layoutButtons;
-    @BindView(R.id.progressBar)
-    ProgressBar progressBar;
-    @BindView(R.id.layoutMainContainer)
-    RelativeLayout layoutMainContainer;*/
-    EditText emaill,passwordd;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -50,9 +37,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-       // ButterKnife.bind(this);
-        emaill = (EditText) findViewById(R.id.editTxtEmail);
-        passwordd = (EditText) findViewById(R.id.editTxtPassword);
+        // Vinculo los componentes con ButterKnife
+        ButterKnife.bind(this);
+
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -60,16 +47,22 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null){
+                if (user != null) {
                     // User is signed in
                     Log.d("Usuario", "onAuthStateChanged:signed_in:" + user.getUid());
-                }else{
+
+                    // If user logn in
+                    profile();
+                } else {
                     // User is signed out
                     Log.d("Usuario", "onAuthStateChanged:signed_out");
                 }
             }
         };
+
     }
+
+
 
     @Override
     protected void onStart() {
@@ -80,35 +73,41 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if(mAuthListener != null){
+        if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
 
-    // @OnClick(R.id.btnSignIn)
-    public void handleSignIn(){
-       /* Log.e("presionado","soy presionado");
-        //String email = editTxtEmail.getText().toString();
-        //String password = editTxtPassword.getText().toString();
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                Log.d("Sign In User", "signInWithEmail:onComplete:" + task.isSuccessful());
 
-                // If sign in fails, display a message to the user. If sign in succeeds
-                // the auth state listener will be notified and logic to handle the
-                // signed in user can be handled in the listener.
-                if(!task.isSuccessful()){
-                    Log.w("Sign In Error", "signInWithEmail", task.getException());
-                    Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+    /** Method click Sing In*/
+    @OnClick(R.id.btnSignIn)
+    public void handleSignIn() {
+
+        String email = editTxtEmail.getText().toString();
+        String password = editTxtPassword.getText().toString();
+        // Verifico que email y password esten presentes
+        if (!email.isEmpty() && !password.isEmpty()){
+            // Realizo el sign in con el metodo de FirebaseAuth y la instancia
+            mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    Log.d("Usuario Sing In","Verificando acceso");
+                    // Si hay algun problema al registrarse y validar los datos
+                    if (!task.isSuccessful()){
+                        Log.e("Error","paso: " + task.getException().getMessage());
+                        Toast.makeText(LoginActivity.this, task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });*/
+            });
+
+        }else{
+            Toast.makeText(this,"¡Email y password son requeridos!",Toast.LENGTH_SHORT).show();
+        }
 
     }
 
-   //  @OnClick(R.id.btnSignUp)
-    public void handleSignUp(){
+    //  @OnClick(R.id.btnSignUp)
+    public void handleSignUp() {
        /* Log.e("presionado2222222","soy presionado");
         String email = editTxtEmail.getText().toString();
         String password = editTxtPassword.getText().toString();
@@ -127,34 +126,14 @@ public class LoginActivity extends AppCompatActivity {
         });*/
     }
 
-    public void singIn(View view) {
-        Log.e("presionado","soy presionado");
-        //emaill = (EditText) findViewById(R.id.editTxtEmail);
-        //passwordd = (EditText) findViewById(R.id.editTxtPassword);
-        String email = emaill.getText().toString();
-        String password = passwordd.getText().toString();
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                Log.d("Sign In User", "signInWithEmail:onComplete:" + task.isSuccessful());
 
-                // If sign in fails, display a message to the user. If sign in succeeds
-                // the auth state listener will be notified and logic to handle the
-                // signed in user can be handled in the listener.
-                if(!task.isSuccessful()){
-                    Log.w("Sign In Error", "signInWithEmail", task.getException());
-                    Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
 
     public void singUp(View view) {
 
-        Log.e("presionado2222222","soy presionado");
+        /*Log.e("presionado2222222", "soy presionado");
         String email = emaill.getText().toString();
         String password = passwordd.getText().toString();
-        mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 Log.d("Usuario registrado", "createUserWithEmail:onComplete:" + task.isSuccessful());
@@ -162,10 +141,16 @@ public class LoginActivity extends AppCompatActivity {
                 // If sign in fails, display a message to the user. If sign in succeeds
                 // the auth state listener will be notified and logic to handle the
                 // signed in user can be handled in the listener.
-                if (!task.isSuccessful()){
+                if (!task.isSuccessful()) {
                     Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+        });*/
+    }
+
+    // Este metodo me permite dirigir a la actividad de perfil para configurar los datos del usuario.
+    public void profile() {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
     }
 }

@@ -4,4 +4,8 @@
     <string name="login.message.password">Password</string>
     <string name="login.button.signin">Iniciar sesion</string>
     <string name="login.button.signup">Crear cuenta</string>
+    <string name="profile.message">Profile</string>
+    <string name="profile.editText.name">Nombre de usuario</string>
+    <string name="profile.button.setProfile">Registrar</string>
+    <string name="profile.button.signOut">Salir</string>
 </resources>
