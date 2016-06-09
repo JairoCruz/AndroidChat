@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +30,8 @@ public class LoginActivity extends AppCompatActivity {
     EditText editTxtEmail;
     @Bind(R.id.editTxtPassword)
     EditText editTxtPassword;
+    @Bind(R.id.progressBar)
+    ProgressBar progressBar;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -87,11 +90,13 @@ public class LoginActivity extends AppCompatActivity {
         String password = editTxtPassword.getText().toString();
         // Verifico que email y password esten presentes
         if (!email.isEmpty() && !password.isEmpty()){
+            progressBar.setVisibility(View.VISIBLE);
             // Realizo el sign in con el metodo de FirebaseAuth y la instancia
             mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    Log.d("Usuario Sing In","Verificando acceso");
+                    Log.d("Usuario Sing In","Verificando accesoooooooooooooo");
+                    progressBar.setVisibility(View.GONE);
                     // Si hay algun problema al registrarse y validar los datos
                     if (!task.isSuccessful()){
                         Log.e("Error","paso: " + task.getException().getMessage());
